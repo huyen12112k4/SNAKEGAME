@@ -54,6 +54,11 @@
     <Text Include="snakeIMG.txt">
       <Filter>Source Files</Filter>
     </Text>
-    <Text Include="MenuBG.txt" />
+    <Text Include="MenuBG.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="snakeBoard.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

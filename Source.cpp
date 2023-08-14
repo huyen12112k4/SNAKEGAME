@@ -2,7 +2,7 @@
 
 HANDLE cons = GetStdHandle(STD_OUTPUT_HANDLE);
 POINT snake[32];
-POINT food[11];
+POINT food[1];
 
 int CHAR_LOCK;
 int MOVING;
@@ -80,7 +80,7 @@ void StartGame() {
 }
 
 void DrawBoard(int x, int y, int width, int height, int curPosX, int curPosY /*string name, int length, int level*/) {
-	system("color F0"); // bg color
+	system("color 70"); // bg color
 
 	
 
@@ -177,9 +177,11 @@ void Eat() {
 			FOOD_INDEX = 0;
 
 			clearSnake();
-			SIZE_SNAKE = -1; // 6
+			Sleep(3000);
 			
+			SIZE_SNAKE = -1; // 6
 			SPEED = 1;
+
 		}
 
 		GenerateFood();
@@ -227,11 +229,9 @@ void ProcessDead() {
 		cout << u8"█▄▀ ██▄ █▀█ █▄▀";
 		SetConsoleOutputCP(old_cp);
 			
-		animation();
-		GotoXY(0, HEIGH_CONSOLE + 6);
-		cout << "NAME:            ROUND :			SPEED :      " << endl;
-		GotoXY(0, HEIGH_CONSOLE + 8);
-		cout << "DO YOU WANT TO PLAY AGAIN (y/n) : ";
+		readFileAnimation("snakeBoard.txt", 0, 0, 122);
+		readFileAnimation("dead.txt", 18, 1, 121);
+		
 	}
 }
 
@@ -347,12 +347,13 @@ void clearSnake() {
 	}
 }
 
+
 void ThreadFunc() {
 
 	char snakefood[] = "0";
 	char space[] = " ";
 	int index = 0;
-
+	
 	while (1) {
 		
 		if (STATE == 1) {
@@ -371,6 +372,14 @@ void ThreadFunc() {
 				MoveDown();
 				break;
 			}
+			if (SPEED == 2) {
+				system("cls");
+				system("color 74");
+				readFileAnimation("congrat.txt", 1, 12, 124);
+				STATE = 0;
+				continue;
+			}
+			
 
 			// Food
 			GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
@@ -405,6 +414,7 @@ void ThreadFunc() {
 			Sleep(250 / SPEED); // change speed here
 		}
 	}
+
 	//GotoXY(snake[0].x, snake[0].y);
 }
 void resizeConsole(int width, int height)

@@ -18,10 +18,11 @@
 #include <time.h>
 #include <mmsystem.h>
 #include <cwchar>
+#include <atomic>
 using namespace std;
 
 #define MAX_SIZE_SNAKE 32
-#define MAX_SIZE_FOOD 11
+#define MAX_SIZE_FOOD 1
 #define MAX_SPEED 3
 #define BLUE 1
 #define GREEN 2
@@ -54,7 +55,7 @@ struct PlayerData {
 };
 
 extern POINT snake[32];
-extern POINT food[11];
+extern POINT food[1];
 
 extern int CHAR_LOCK;
 extern int MOVING;

@@ -142,6 +142,7 @@
     <Text Include="dead.txt" />
     <Text Include="keyboard.txt" />
     <Text Include="MenuBG.txt" />
+    <Text Include="snakeBoard.txt" />
     <Text Include="SnakeBG.txt" />
     <Text Include="snakeIMG.txt" />
     <Text Include="snakeIlu.txt" />

@@ -1,6 +1,4 @@
 ﻿  Source.cpp
-C:\Users\ASUS\Downloads\TEMP\Source.cpp(54,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\ASUS\Downloads\TEMP\Source.cpp(706,52): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  main.cpp
-  Generating Code...
-  TEMP.vcxproj -> C:\Users\ASUS\Downloads\TEMP\x64\Debug\TEMP.exe
+C:\Users\ASUS\Downloads\Update14_8\Source.cpp(54,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\ASUS\Downloads\Update14_8\Source.cpp(716,52): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  TEMP.vcxproj -> C:\Users\ASUS\Downloads\Update14_8\x64\Debug\TEMP.exe
