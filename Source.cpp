@@ -1,7 +1,7 @@
 ﻿#include"snake.h"
 
 HANDLE cons = GetStdHandle(STD_OUTPUT_HANDLE);
-POINT snake[32];
+POINT snake[31];
 POINT food[8];
 
 int CHAR_LOCK;
@@ -73,64 +73,66 @@ void ResetData() {
 
 void StartGame() {
 	system("cls");
-	
+
+	// Print state
+	color(15);
+	GotoXY(106, 12);
+	cout << "ROUND: " << SPEED << "/3";
+
+	GotoXY(106, 15);
+	cout << "LENGTH: " << SIZE_SNAKE << "/32";
+
 	ResetData();
 	DrawBoard(32, 7, WIDTH_CONSOLE, HEIGH_CONSOLE, 0, 0);
 	STATE = 1;
 }
 
 void DrawBoard(int x, int y, int width, int height, int curPosX, int curPosY /*string name, int length, int level*/) {
-	system("color 70"); // bg color
-
-	
+	system("color F0"); // bg color
 
 	color(192);
-	GotoXY(x, y); cout << char(4);
+	GotoXY(x, y); cout << char(201);
 	for (int i = 1; i < width; i++)
-		cout << char(31);
-	cout << char(4);
-	GotoXY(x, height + y); cout << char(4);
-	for (int i = 1; i < width; i++)cout << char(30);
-	cout << char(4);
+		cout << char(205);
+	cout << char(187);
+	GotoXY(x, height + y); cout << char(200);
+	for (int i = 1; i < width; i++)cout << char(205);
+	cout << char(205);
+
 
 	for (int i = y + 1; i < height + y; i++) {
-		GotoXY(x, i); cout << char(16);
-		GotoXY(x + width, i); cout << char(17);
+		GotoXY(x, i); cout << char(186);
+		GotoXY(x + width, i); cout << char(186);
 	}
+	GotoXY(x + width, height + y);
+	cout << char(188);
 
 	// right
 	color(144);
 	GotoXY(x + width + 2, y);
-	for (int i = 1; i < 22; i++)
+	for (int i = 1; i <= 22; i++)
 		cout << char(220);
 	GotoXY(x + width + 2, y + height);
-	for (int i = 1; i < 22; i++)
+	for (int i = 1; i <= 22; i++)
 		cout << char(223);
 
 	color(144);
 	for (int i = y + 1; i < height + y; i++) {
 		GotoXY(x + width + 2, i); cout << char(221);
-		GotoXY(x + width + 22, i); cout << char(222);
+		GotoXY(x + width + 23, i); cout << char(222);
 	}
-
-	GotoXY(x + width + 3, y + height / 2 + 2);
-	cout << "-------------------";
+	GotoXY(x + width + 3, y + height / 2 + 1);
+	cout << "                    ";
 
 	color(15);
 	GotoXY(x + width + 4, y + 2);
-	cout << "NAME:";
-
-
-	GotoXY(x + width + 4, y + 5);
-	cout << "ROUND: " << SPEED << "/3";
-
-	GotoXY(x + width + 4, y + 8);
-	cout << "LENGTH: " << SIZE_SNAKE << " /33";
-
-	GotoXY(x + width + 9, y + 14);
+	cout << "NAME: ";
+	
+	
+	GotoXY(x + width + 9, y + 13);
 	cout << "STATUS ";
 
-	GotoXY(x + width + 10, y + 16);
+	GotoXY(x + width + 12, y + 15);
 	ProcessDead();
 
 
@@ -149,10 +151,10 @@ void DrawBoard(int x, int y, int width, int height, int curPosX, int curPosY /*s
 		GotoXY(x - 2, i); cout << char(222);
 	}
 
-	readFileAnimation("keyboard.txt", x - 21, y + 1, 240);
+	readFileAnimation("keyboard.txt", x - 21, y + 1, 249);
 
 	// Top
-	readFileAnimation("snakeIlu.txt", 31, 6, 242);
+	readFileAnimation("snakeIlu.txt", 31, 6, 252);
 
 	GotoXY(curPosX, curPosY);
 }
@@ -164,6 +166,19 @@ void ExitGame(HANDLE t) {
 
 
 void PauseGame(HANDLE t) {
+	color(249);
+	GotoXY(106, 23);
+	UINT old_cp = GetConsoleOutputCP();
+	SetConsoleOutputCP(CP_UTF8);
+	cout << u8"█▀█ ▄▀█ █░█ █▀ █▀▀";
+	GotoXY(106, 24);
+	cout << u8"█▀▀ █▀█ █▄█ ▄█ ██▄";
+
+	GotoXY(20, 30);
+	cout << u8"█▀█ █▀█ █▀▀ █▀ █▀   ▄▀█ █▄░█ █▄█   █▄▀ █▀▀ █▄█   ▀█▀ █▀█   █▀▀ █▀█ █░█ █▄░█ ▀█▀ █ █▄░█ █░█ █▀▀";
+	GotoXY(20, 31);
+	cout << u8"█▀▀ █▀▄ ██▄ ▄█ ▄█   █▀█ █░▀█ ░█░   █░█ ██▄ ░█░   ░█░ █▄█   █▄▄ █▄█ █▄█ █░▀█ ░█░ █ █░▀█ █▄█ ██▄";
+	SetConsoleOutputCP(old_cp);
 	SuspendThread(t);
 }
 
@@ -171,6 +186,7 @@ void Eat() {
 
 	snake[SIZE_SNAKE] = food[FOOD_INDEX];
 	if (FOOD_INDEX == MAX_SIZE_FOOD - 1) { //3
+
 		FOOD_INDEX = 0;
 		SPEED++;
 		if (SPEED == MAX_SPEED) { // 2
@@ -187,12 +203,20 @@ void Eat() {
 		GenerateFood();
 	}
 	else {
+		PlaySound(TEXT("Selectright.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		FOOD_INDEX++;
 		SIZE_SNAKE++;
+		color(15);
+		GotoXY(106, 15);
+		cout << "LENGTH: " << SIZE_SNAKE << " /32";
 	}
 }
 
 void readFileAnimation(string filename, int x, int y, int colorCode) {
+	if (filename == "congrat.txt")
+		PlaySound(TEXT("youwin.wav"), NULL, SND_FILENAME | SND_ASYNC);
+	else if (filename == "dead.txt")
+		PlaySound(TEXT("youlose.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	UINT old_cp = GetConsoleOutputCP();
 	SetConsoleOutputCP(CP_UTF8);
 	ifstream fin;
@@ -210,27 +234,28 @@ void readFileAnimation(string filename, int x, int y, int colorCode) {
 
 }
 void ProcessDead() {
+
 	color(249);
 	if (STATE == 1) {
-		GotoXY(108, 23);
+		GotoXY(109, 23);
 		UINT old_cp = GetConsoleOutputCP();
 		SetConsoleOutputCP(CP_UTF8);
 		cout << u8"█░░ █ █░█ █▀▀";
-		GotoXY(108, 24);
+		GotoXY(109, 24);
 		cout << u8"█▄▄ █ ▀▄▀ ██▄";
 		SetConsoleOutputCP(old_cp);
 	}
 	else {
-		GotoXY(107, 23);
+		GotoXY(108, 23);
 		UINT old_cp = GetConsoleOutputCP();
 		SetConsoleOutputCP(CP_UTF8);
 		cout << u8"█▀▄ █▀▀ ▄▀█ █▀▄";
-		GotoXY(107, 24);
+		GotoXY(108, 24);
 		cout << u8"█▄▀ ██▄ █▀█ █▄▀";
 		SetConsoleOutputCP(old_cp);
 			
-		readFileAnimation("snakeBoard.txt", 0, 0, 122);
-		readFileAnimation("dead.txt", 18, 1, 121);
+		readFileAnimation("snakeBoard.txt", 0, 0, 250);
+		readFileAnimation("dead.txt", 18, 1, 249);
 		
 	}
 }
@@ -357,6 +382,7 @@ void ThreadFunc() {
 	while (1) {
 		
 		if (STATE == 1) {
+			
 			DrawSnakeAndFood(space);
 			switch (MOVING) {
 			case 'A':
@@ -372,10 +398,10 @@ void ThreadFunc() {
 				MoveDown();
 				break;
 			}
-			if (SPEED == MAX_SPEED) {
+			if (SPEED == MAX_SPEED - 1) {
 				system("cls");
-				system("color 74");
-				readFileAnimation("congrat.txt", 1, 12, 124);
+				system("color 252");
+				readFileAnimation("congrat.txt", 1, 12, 252);
 				STATE = 0;
 				continue;
 			}
@@ -411,11 +437,9 @@ void ThreadFunc() {
 				index++;
 			}
 			index = 0;
-			Sleep(250 / SPEED); // change speed here
+			Sleep(200 / SPEED); // change speed here
 		}
 	}
-
-	//GotoXY(snake[0].x, snake[0].y);
 }
 void resizeConsole(int width, int height)
 {
@@ -445,7 +469,7 @@ void ShowConsoleCursor(bool showFlag)
 	cursorInfo.bVisible = showFlag; // set the cursor visibility
 	SetConsoleCursorInfo(out, &cursorInfo);
 }
-void readFile(string fileName, int color, int& x, int& y, int sleepTime) {
+void readFile(string fileName, int colorcode, int& x, int& y, int sleepTime) {
 	UINT old_cp = GetConsoleOutputCP();
 	SetConsoleOutputCP(CP_UTF8);
 	HANDLE hConsoleColor;
@@ -461,9 +485,9 @@ void readFile(string fileName, int color, int& x, int& y, int sleepTime) {
 
 		getline(fin, line);
 		GotoXY(x, y++);
-		textbackrough();
+		color(colorcode);
 		cout << line << endl;
-		Sleep(sleepTime);
+	/*	Sleep(sleepTime);*/
 		cnt++;
 	}
 	fin.close();
@@ -493,8 +517,11 @@ int getKey() {
 	case 27:
 		return 5; // esc
 
-	case 13:
+	case 13: {
+		
+		PlaySound(TEXT("PressKey.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		return 6; // enter
+	}
 
 	case 104:
 		return 7; // h character
@@ -585,14 +612,15 @@ string InputName() {
 	cout << "NAME: ___________________";
 	string s;
 	GotoXY(26, 10);
-	cin >> s;
+	getline(cin, s);
 	system("cls");
 	return s;
 }
 
 
 void mainMenu(int& option) {
-	system("color 70");
+	PlaySound(TEXT("menu.wav"), NULL, SND_FILENAME | SND_ASYNC);
+	system("color F0");
 	resizeConsole(1000, 600);
 	ShowConsoleCursor(false);
 	
@@ -601,23 +629,23 @@ void mainMenu(int& option) {
 	UINT init_cp = GetConsoleOutputCP();
 	UINT old_cp = GetConsoleOutputCP();
 	SetConsoleOutputCP(CP_UTF8);
-	textcolor(LIGHTRED);
+	color(252);
 	GotoXY(16, 1);
-	textbackrough();
+	
 	cout << u8"♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥";
 	SetConsoleOutputCP(old_cp);
 
 
 	// 1. print background
 	int p = 6, q = 12;
-	readFileAnimation("MenuBG.txt", p, q, 122);
+	readFileAnimation("MenuBG.txt", p, q, 250);
 
 	p = 30, q = 5;
-	readFile("SnakeBG.txt", LIGHTRED, p, q, 50);
+	readFile("SnakeBG.txt", 252, p, q, 252);
 	
 	p = 39;
 	q = 12;
-	readFile("snakeIMG.txt", GREEN, p, q, 100);
+	readFile("snakeIMG.txt", 252, p, q, 100);
 
 	Sleep(300);
 	p = 50;
@@ -637,10 +665,16 @@ void mainMenu(int& option) {
 	for (int i = 0; i < 5; i++) {
 		GotoXY(p + 3, q + 2 * i);
 
-		color(LIGHTRED);
+		
 
 		textbackrough();
-		cout << u8"☆━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━☆";
+		color(250);
+		if (i == 0) {
+			cout << u8"๑━━━━━━━━━━━━━๑۩۩๑๑۩۩๑━━━━━━━━━━━━๑";
+		}
+		else {
+			cout << u8"☆━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━☆";
+		}
 
 	}
 	SetConsoleOutputCP(old_cp);
@@ -653,11 +687,12 @@ void mainMenu(int& option) {
 		GotoXY(p + 3, q + 1 + 2 * i);
 
 		textbackrough();
+		color(250);
 		cout << u8"☆                                 ☆";
 
 	}
 	SetConsoleOutputCP(old_cp);
-	color(YELLOW);
+
 
 
 	for (int i = 0; i < 4; i++) {
@@ -665,7 +700,7 @@ void mainMenu(int& option) {
 		if (i == 2) {
 			GotoXY(p + 16, q + 1 + 2 * i);
 		}
-		textbackrough();
+		color(252);
 		cout << text[i];
 	}
 
@@ -675,6 +710,7 @@ void mainMenu(int& option) {
 	while (1) {
 
 		int ch = getKey();
+
 		if (ch == 6 && option != 0) {
 			break;
 		}
@@ -692,27 +728,32 @@ void mainMenu(int& option) {
 		// old option
 		if (oldOption != 0) {
 			GotoXY(p + 4, q + 1 + 2 * (oldOption - 1));
-
-			color(119);
-
+			color(255);
 			cout << "                                 ";
 
 			GotoXY(p + 19, q + 1 + 2 * (oldOption - 1));
 			if (oldOption == 3)
 				GotoXY(p + 16, q + 1 + 2 * (oldOption - 1));
-			color(116);
+			color(244);
 			cout << text[oldOption - 1];
 		}
 
+		color(255);
+		GotoXY(p, q + 1 + 2 * (oldOption - 1));
+		cout << "  ";
 		oldOption = option;
-
-		GotoXY(p + 4, q + 1 + 2 * (option - 1));
-
-		color(LIGHTRED);
+		old_cp = GetConsoleOutputCP();
+		SetConsoleOutputCP(CP_UTF8);
+		color(250);
+		GotoXY(p, q + 1 + 2 * (option - 1));
+		cout << u8"🐍";
+		SetConsoleOutputCP(old_cp);
+		color(014);
 
 		/*textbackrough();*/
 		GotoXY(p + 4, q + 1 + 2 * (option - 1));
 		cout << "                                 ";
+		
 		GotoXY(p + (width - text[option - 1].size()) / 2 + 9, q + 1 + 2 * (option - 1));
 		cout << text[option - 1];
 		/*color(YELLOW);*/
@@ -723,46 +764,3 @@ void mainMenu(int& option) {
 	system("cls");
 }
 
-
-void colorKeyBoard(int arrow) {
-	if (char(arrow) == 'D') {
-		GotoXY(25, 15);
-		color(192);
-		cout << " D ";
-		GotoXY(25, 15);
-		Sleep(10);
-		color(240);
-		cout << " D ";
-		return;
-	}
-	if (char(arrow) == 'S') {
-		GotoXY(19, 15);
-		color(192);
-		cout << " S ";
-		Sleep(10);
-		GotoXY(19, 15);
-		color(240);
-		cout << " S ";
-		return;
-	}
-	if (char(arrow) == 'A') {
-		GotoXY(13, 15);
-		color(192);
-		cout << " A ";
-		Sleep(10);
-		GotoXY(13, 15);
-		color(240);
-		cout << " A ";
-		return;
-	}
-	if (char(arrow) == 'W') {
-		GotoXY(19, 12);
-		color(192);
-		cout << " W ";
-		Sleep(10);
-		GotoXY(19, 12);
-		color(240);
-		cout << " W ";
-		return;
-	}
-}

@@ -134,9 +134,6 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\MenuPlayScreen (2)\Menu+PlayScreen\menu.wav" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="congrat.txt" />
     <Text Include="Data.txt" />
     <Text Include="dead.txt" />
@@ -146,6 +143,9 @@
     <Text Include="SnakeBG.txt" />
     <Text Include="snakeIMG.txt" />
     <Text Include="snakeIlu.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="menu.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

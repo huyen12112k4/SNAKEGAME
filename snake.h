@@ -23,7 +23,7 @@ using namespace std;
 
 #define MAX_SIZE_SNAKE 32
 #define MAX_SIZE_FOOD 8
-#define MAX_SPEED 3
+#define MAX_SPEED 4
 #define BLUE 1
 #define GREEN 2
 #define CYAN    36
@@ -54,7 +54,7 @@ struct PlayerData {
     bool isGameEnded;
 };
 
-extern POINT snake[32];
+extern POINT snake[31];
 extern POINT food[8];
 
 extern int CHAR_LOCK;
@@ -97,5 +97,4 @@ void textbackrough();
 PlayerData LoadGame(string playerName);
 void SaveGame(string playerName, int round, int score, POINT snake[], int sizeSnake, bool isGameEnded);
 void clearSnake();
-void colorKeyBoard(int arrow);
 #endif // !snake_game

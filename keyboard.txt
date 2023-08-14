@@ -1,6 +1,10 @@
+
+ ---INSTRUCTION---
+
  /---\
 | ESC | EXIT GAME
  \---/
+       MOVING
        /---\
       |  W  |
        \---/

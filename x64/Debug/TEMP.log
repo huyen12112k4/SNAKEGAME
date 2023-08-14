@@ -1,6 +1,4 @@
-﻿  main.cpp
-  Source.cpp
-C:\Users\ASUS\Documents\GitHub\SNAKEGAME\Source.cpp(54,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\ASUS\Documents\GitHub\SNAKEGAME\Source.cpp(716,52): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  Generating Code...
-  TEMP.vcxproj -> C:\Users\ASUS\Documents\GitHub\SNAKEGAME\x64\Debug\TEMP.exe
+﻿  Source.cpp
+C:\Users\ASUS\Downloads\SNAKEGAME-main\SNAKEGAME-main\Source.cpp(54,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\ASUS\Downloads\SNAKEGAME-main\SNAKEGAME-main\Source.cpp(757,52): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  TEMP.vcxproj -> C:\Users\ASUS\Downloads\SNAKEGAME-main\SNAKEGAME-main\x64\Debug\TEMP.exe
