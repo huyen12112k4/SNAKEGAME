@@ -2,7 +2,7 @@
 
 HANDLE cons = GetStdHandle(STD_OUTPUT_HANDLE);
 POINT snake[32];
-POINT food[1];
+POINT food[8];
 
 int CHAR_LOCK;
 int MOVING;
@@ -372,7 +372,7 @@ void ThreadFunc() {
 				MoveDown();
 				break;
 			}
-			if (SPEED == 2) {
+			if (SPEED == MAX_SPEED) {
 				system("cls");
 				system("color 74");
 				readFileAnimation("congrat.txt", 1, 12, 124);
