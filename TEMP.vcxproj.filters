@@ -55,6 +55,15 @@
     <Text Include="snakeBoard.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="playerData.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="Load.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="Star.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Media Include="menu.wav">

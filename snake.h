@@ -23,7 +23,7 @@ using namespace std;
 
 #define MAX_SIZE_SNAKE 32
 #define MAX_SIZE_FOOD 8
-#define MAX_SPEED 4
+#define MAX_SPEED 5
 #define BLUE 1
 #define GREEN 2
 #define CYAN    36
@@ -44,19 +44,11 @@ using namespace std;
 
 
 
-struct PlayerData {
-    string playerName;
-    int round;
-    int score;
-    POINT snake[MAX_SIZE_SNAKE];
-    int sizeSnake;
-    string timeStr;
-    bool isGameEnded;
-};
 
 extern POINT snake[31];
 extern POINT food[8];
-
+extern string NAME;
+extern bool music;
 extern int CHAR_LOCK;
 extern int MOVING;
 extern int SPEED;
@@ -70,7 +62,7 @@ void GotoXY(int x, int y);
 bool IsValid(int x, int y);
 void GenerateFood();
 void ResetData();
-void StartGame();
+void StartGame(int key);
 void DrawBoard(int x, int y, int width, int height, int curPosX, int curPosY);
 void ExitGame(HANDLE t);
 void PauseGame(HANDLE t);
@@ -87,14 +79,17 @@ void ThreadFunc();
 void readFileAnimation(string filename, int x, int y, int colorCode);
 void color(int color);
 void resizeConsole(int width, int height);
-void textcolor(int x);
+
 void ShowConsoleCursor(bool showFlag);
 void readFile(string fileName, int color, int& x, int& y, int sleepTime = 100);
 int getKey();
 string InputName();
 void mainMenu(int& option);
 void textbackrough();
-PlayerData LoadGame(string playerName);
-void SaveGame(string playerName, int round, int score, POINT snake[], int sizeSnake, bool isGameEnded);
+void Sorting(string fileName);
+void showLeaderboard();
+
+void SaveGame();
+string LoadGame(string fileName);
 void clearSnake();
 #endif // !snake_game

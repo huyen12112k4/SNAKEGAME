@@ -138,11 +138,14 @@
     <Text Include="Data.txt" />
     <Text Include="dead.txt" />
     <Text Include="keyboard.txt" />
+    <Text Include="Load.txt" />
     <Text Include="MenuBG.txt" />
+    <Text Include="playerData.txt" />
     <Text Include="snakeBoard.txt" />
     <Text Include="SnakeBG.txt" />
     <Text Include="snakeIMG.txt" />
     <Text Include="snakeIlu.txt" />
+    <Text Include="Star.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="menu.wav" />

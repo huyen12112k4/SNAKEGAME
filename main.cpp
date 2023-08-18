@@ -1,8 +1,6 @@
 #include"snake.h"
 
-
 #pragma comment(lib, "winmm.lib")
-
 
 int main() {
   
@@ -12,12 +10,11 @@ int main() {
     mainMenu(option);
     thread t1(ThreadFunc);
     HANDLE handle_t1 = t1.native_handle();
-    
+    int key = 1;
     bool isRun = true;
-    string s;
-    
+    string s, filename;
     while (isRun) {
-        
+        // thoat
         if (option == 4) {
             ExitGame(handle_t1);
             break;
@@ -25,17 +22,19 @@ int main() {
 
         STATE = 1;
         switch (option) {
-
-        case 1:
+        case 1: // Start game
+            system("cls");
             STATE = 0;
             s = InputName();
+            NAME = s;
+            
             STATE = 1;
 
-            StartGame();
+            StartGame(key);
             // Print name
             color(15);
             GotoXY(112, 9);
-            cout << s;
+            cout << NAME;
 
             color(15);
             GotoXY(106, 12);
@@ -45,6 +44,7 @@ int main() {
             cout << "LENGTH: " << SIZE_SNAKE << " /32";
    
             while (1) {
+                
                 temp = toupper(_getch());
                 if (STATE == 1) {
                     if (temp == 'P') {
@@ -56,23 +56,35 @@ int main() {
                         mainMenu(option);
                         break;
                     }
+                    else if (temp == 'L') {
+                        PauseGame(handle_t1);
+                        SaveGame();
+                    }
+                    else if (temp == 'T') {
+                        
+                        STATE = 0;
+                        system("cls");
+                        filename = InputName();
+                        NAME = LoadGame(filename);
+                        StartGame(2);
+                   
+
+                    }
                     else {
                         ResumeThread(handle_t1);
                         // Delete pause
                         color(249);
                         GotoXY(106, 23);
-                        UINT old_cp = GetConsoleOutputCP();
-                        SetConsoleOutputCP(CP_UTF8);
-                        cout << u8"                   ";
+                        
+                        cout << "                   ";
                         GotoXY(106, 24);
-                        cout << u8"                   ";
-                        SetConsoleOutputCP(old_cp);
+                        cout << "                   ";
 
                         // Delete pause notice
                         GotoXY(20, 30);
-                        cout << u8"                                                                                                                ";
+                        cout << "                                                                                                                ";
                         GotoXY(20, 31);
-                        cout << u8"                                                                                                                ";
+                        cout << "                                                                                                                ";
 
                         ProcessDead();
 
@@ -95,16 +107,19 @@ int main() {
                         }
                     }
                 }
+               
                 else {
+                    SaveGame();
                     if (temp == 'Y') {
-                        
+                        key = 1;
                         STATE = 1;
                         color(15);
-                        StartGame();
+                        StartGame(key);
+
                         // Print name again
                         color(15);
                         GotoXY(112, 9);
-                        cout << s;
+                        cout << NAME;
 
                         color(15);
                         GotoXY(106, 12);
@@ -116,13 +131,13 @@ int main() {
                     else {
                         system("cls");
                         mainMenu(option);
-                        StartGame();
+                        StartGame(key);
 
                         color(15);
+                        
                         GotoXY(112, 9);
-                        cout << s;
+                        cout << NAME;
 
-                        color(15);
                         GotoXY(106, 12);
                         cout << "ROUND: " << SPEED << "/3";
 
@@ -133,12 +148,20 @@ int main() {
             }
             break;
         case 2:
+            STATE = 0;
+            if (music == 1)
+                music = 0;
+            else if (music == 0)
+                music = 1;
             mainMenu(option);
             break;
         case 3:
+            STATE = 0;
+            showLeaderboard();
+            system("cls");
             mainMenu(option);
             break;
-        case 4:
+        case 4: // 
             ExitGame(handle_t1);
             isRun = false;
             break;
@@ -146,6 +169,6 @@ int main() {
     }
 
 
-    return 0;
 
+    return 0;
 }
