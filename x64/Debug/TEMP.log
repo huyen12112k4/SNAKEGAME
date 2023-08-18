@@ -1,7 +1,4 @@
-﻿  main.cpp
-  Source.cpp
-C:\Users\ASUS\Downloads\Update (2)\Source\Source.cpp(56,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\ASUS\Downloads\Update (2)\Source\Source.cpp(752,52): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  Generating Code...
-  LINK : C:\Users\ASUS\Downloads\Update (2)\Source\x64\Debug\TEMP.exe not found or not built by the last incremental link; performing full link
-  TEMP.vcxproj -> C:\Users\ASUS\Downloads\Update (2)\Source\x64\Debug\TEMP.exe
+﻿  Source.cpp
+C:\Users\ASUS\Downloads\Update (3)\Update\Source.cpp(58,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\ASUS\Downloads\Update (3)\Update\Source.cpp(895,52): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  TEMP.vcxproj -> C:\Users\ASUS\Downloads\Update (3)\Update\x64\Debug\TEMP.exe

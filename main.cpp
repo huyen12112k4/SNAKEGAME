@@ -12,6 +12,7 @@ int main() {
     HANDLE handle_t1 = t1.native_handle();
     int key = 1;
     bool isRun = true;
+    bool pause = false;
     string s, filename;
     while (isRun) {
         // thoat
@@ -32,24 +33,18 @@ int main() {
 
             StartGame(key);
             // Print name
-            color(15);
-            GotoXY(112, 9);
-            cout << NAME;
-
-            color(15);
-            GotoXY(106, 12);
-            cout << "ROUND: " << SPEED << "/3";
-
-            GotoXY(106, 15);
-            cout << "LENGTH: " << SIZE_SNAKE << " /32";
+            
    
             while (1) {
                 
                 temp = toupper(_getch());
+                checkPause(pause);
                 if (STATE == 1) {
+                    
                     if (temp == 'P') {
                         PauseGame(handle_t1);
                     }
+
                     else if (temp == 27) { // esc
                         STATE = 0;
                         system("cls");
@@ -73,18 +68,7 @@ int main() {
                     else {
                         ResumeThread(handle_t1);
                         // Delete pause
-                        color(249);
-                        GotoXY(106, 23);
                         
-                        cout << "                   ";
-                        GotoXY(106, 24);
-                        cout << "                   ";
-
-                        // Delete pause notice
-                        GotoXY(20, 30);
-                        cout << "                                                                                                                ";
-                        GotoXY(20, 31);
-                        cout << "                                                                                                                ";
 
                         ProcessDead();
 

@@ -1,8 +1,10 @@
 ﻿#include"snake.h"
 
 HANDLE cons = GetStdHandle(STD_OUTPUT_HANDLE);
-POINT snake[31];
+POINT snake[32];
 POINT food[8];
+POINT WALL[100], TRIGGER[5], trigger;
+int WALLcount, triggerCount, SEED, LEVEL;
 string sort[3][2];
 bool music = 1;
 string NAME;
@@ -64,10 +66,11 @@ void GenerateFood() {
 }
 
 void ResetData() {
-		CHAR_LOCK = 'A', MOVING = 'D', SPEED = 1; FOOD_INDEX = 0, WIDTH_CONSOLE = 70, HEIGH_CONSOLE = 20, SIZE_SNAKE = 6, STATE = 1;
+		CHAR_LOCK = 'A', MOVING = 'D', SPEED = 1; FOOD_INDEX = 0, WIDTH_CONSOLE = 70, HEIGH_CONSOLE = 20, SIZE_SNAKE = 8, STATE = 1;
 		snake[0] = { 10 + 32, 5 + 7 }; snake[1] = { 11 + 32, 5 + 7 };
 		snake[2] = { 12 + 32, 5 + 7 }; snake[3] = { 13 + 32, 5 + 7 };
 		snake[4] = { 14 + 32, 5 + 7 }; snake[5] = { 15 + 32, 5 + 7 };
+		snake[6] = { 16 + 32, 5 + 7 }; snake[7] = { 17 + 32, 5 + 7 };
 
 
 }
@@ -80,7 +83,7 @@ void StartGame(int key) {
 		ResetData();
 	else {
 		CHAR_LOCK = 'A', MOVING = 'D'; 
-		FOOD_INDEX = 0, WIDTH_CONSOLE = 70, HEIGH_CONSOLE = 20;
+		FOOD_INDEX = SIZE_SNAKE % 8, WIDTH_CONSOLE = 70, HEIGH_CONSOLE = 20;
 	}
 		GenerateFood();
 	// Print state
@@ -156,11 +159,11 @@ void DrawBoard(int x, int y, int width, int height, int curPosX, int curPosY /*s
 
 	color(15);
 	GotoXY(x + width + 4, y + 2);
-	cout << "NAME: ";
+	cout << "NAME: " << NAME;
 	
 	
-	GotoXY(x + width + 9, y + 13);
-	cout << "STATUS ";
+	/*GotoXY(x + width + 9, y + 13);*/
+	/*cout << "STATUS ";*/
 
 	GotoXY(x + width + 12, y + 15);
 	ProcessDead();
@@ -205,11 +208,31 @@ void PauseGame(HANDLE t) {
 	cout << u8"█▀▀ █▀█ █▄█ ▄█ ██▄";
 
 	GotoXY(20, 30);
-	cout << u8"█▀█ █▀█ █▀▀ █▀ █▀   ▄▀█ █▄░█ █▄█   █▄▀ █▀▀ █▄█   ▀█▀ █▀█   █▀▀ █▀█ █░█ █▄░█ ▀█▀ █ █▄░█ █░█ █▀▀";
+	cout << u8"█▀█ █▀█ █▀▀ █▀ █▀   █▀▀ █▄░█ ▀█▀ █▀▀ █▀█   ▀█▀ █▀█   █▀▀ █▀█ █▄░█ ▀█▀ █ █▄░█ █░█ █▀▀";
 	GotoXY(20, 31);
-	cout << u8"█▀▀ █▀▄ ██▄ ▄█ ▄█   █▀█ █░▀█ ░█░   █░█ ██▄ ░█░   ░█░ █▄█   █▄▄ █▄█ █▄█ █░▀█ ░█░ █ █░▀█ █▄█ ██▄";
+	cout << u8"█▀▀ █▀▄ ██▄ ▄█ ▄█   ██▄ █░▀█ ░█░ ██▄ █▀▄   ░█░ █▄█   █▄▄ █▄█ █░▀█ ░█░ █ █░▀█ █▄█ ██▄";
 	SetConsoleOutputCP(old_cp);
 	SuspendThread(t);
+	
+}
+
+void DrawGateIn() {
+	food[FOOD_INDEX] = { 0 , HEIGH_CONSOLE + 1 };
+	color(9);
+	srand(SEED);
+	for (int i = 1; i < LEVEL; i++) {
+		rand(); rand();
+	}
+	do {
+		trigger.x = rand() % (WIDTH_CONSOLE - 5) + 2;
+		trigger.y = rand() % (HEIGH_CONSOLE - 7) + 4;
+	} while (!IsValidGate(trigger.x, trigger.y));
+	GotoXY(trigger.x, trigger.y);
+	cout << 'x';
+	drawHorWALL(219, 4, trigger.x - 1, trigger.y + 1, triggerCount, TRIGGER);
+	drawVerWALL(219, 1, trigger.x - 1, trigger.y, triggerCount, TRIGGER);
+	drawVerWALL(219, 1, trigger.x + 2, trigger.y, triggerCount, TRIGGER);
+	color(7);
 }
 
 void Eat() {
@@ -219,6 +242,7 @@ void Eat() {
 
 		FOOD_INDEX = 0;
 		SPEED++;
+		
 		if (SPEED == MAX_SPEED) { // 2
 			FOOD_INDEX = 0;
 
@@ -227,7 +251,7 @@ void Eat() {
 			
 			SIZE_SNAKE = -1; // 6
 			SPEED = 1;
-
+			DrawGateIn();
 		}
 
 		GenerateFood();
@@ -317,9 +341,112 @@ bool touchBody() {
 	return false;
 }
 
+bool IsValidGate(int x, int y) {
+	int a[] = { -1,0,1,-1,1,-1,0,1 };
+	int b[] = { -1,-1,-1,0,0,1,1,1 };
+	for (int j = 0; j < 8; j++) {
+		for (int i = 0; i < SIZE_SNAKE; i++) {
+			if (snake[i].x == x + a[j] && snake[i].y == y + b[j])
+				return false;
+		}
+		for (int i = 0; i < WALLcount; i++) {
+			if (WALL[i].x == x + a[j] && WALL[i].y == y + b[j])
+				return false;
+		}
+	}
+	return true;
+}
+
+void drawVerWALL(int c, int length, int x, int y, int& count, POINT* a) {
+	for (int i = 0; i < length; i++) {
+		GotoXY(x, y + i);
+		cout << (char)c;
+		a[count] = { x,y + i };
+		count++;
+	}
+}
+void drawHorWALL(int c, int length, int x, int y, int& count, POINT* a) {
+	for (int i = 0; i < length; i++) {
+		GotoXY(x + i, y);
+		cout << (char)c;
+		a[count] = { x + i,y };
+		count++;
+	}
+}
+
+
+void drawPointOut() {
+	GotoXY(WIDTH_CONSOLE - 10, 0);
+	cout << (char)220;
+}
+
+void eraseDrawing(POINT start, POINT end) {
+	int mode = _setmode(_fileno(stdout), _O_U16TEXT);
+	for (int i = start.x; i <= end.x; i++) {
+		for (int j = start.y; j <= end.y; j++) {
+			GotoXY(i, j);
+			wcout << L" ";
+		}
+	}
+	mode = _setmode(_fileno(stdout), mode);
+}
+
+void moveGate() {
+	for (int i = 0; i < SIZE_SNAKE - 1; ++i) {
+		snake[i].x = snake[i + 1].x;
+		snake[i].y = snake[i + 1].y;
+	}
+	if (LEVEL == MAX_LEVEL) {
+		LEVEL = 1;
+		SPEED = SPEED - 3; // tang 1 so voi speed ban dau cua vong truoc
+		snake[2] = { trigger.x, trigger.y };
+		snake[1] = { trigger.x, trigger.y - 1 };
+		snake[0] = snake[SIZE_SNAKE - 3];
+		SIZE_SNAKE = 3;
+		WALLcount = 0; triggerCount = 0; trigger = { 0,0 };
+		eraseDrawing({ 1,1 }, { WIDTH_CONSOLE - 1,HEIGH_CONSOLE - 1 });
+		GenerateFood();
+		return;
+	}
+	else {
+		snake[SIZE_SNAKE - 1] = { WIDTH_CONSOLE - 10,1 };
+		LEVEL++; SPEED++;
+		DrawBoard(32, 7, WIDTH_CONSOLE, HEIGH_CONSOLE, 0, 0);	
+	}
+	triggerCount = 1; // Dieu kien gia dinh de xac nhan ran da di qua cong
+}
+
+void clearGate() {
+	triggerCount = 0;
+	color(0);
+	drawHorWALL(219, 3, trigger.x - 1, trigger.y + 1, triggerCount, TRIGGER);
+	drawHorWALL(219, 3, trigger.x - 1, trigger.y, triggerCount, TRIGGER);
+	color(14);
+	drawPointOut();
+	color(7);
+	trigger = { 0,0 };
+	if (LEVEL != 4) {
+		WALLcount = 0;
+		DrawBoard(32, 7, WIDTH_CONSOLE, HEIGH_CONSOLE, 0, 0);
+	}
+	GenerateFood();
+}
+
+bool TouchWALL(int x, int y) {
+	for (int i = 0; i < WALLcount; ++i) {
+
+		if (x == WALL[i].x && y == WALL[i].y)
+			return false;
+	}
+	for (int i = 0; i < triggerCount; ++i) {
+		if (x == TRIGGER[i].x && y == TRIGGER[i].y)
+			return false;
+	}
+	return true;
+}
 
 void MoveRight() {
-	if (snake[SIZE_SNAKE - 1].x + 1 >= WIDTH_CONSOLE + 32 || touchBody() == true) {
+	if (snake[SIZE_SNAKE - 1].x + 1 >= WIDTH_CONSOLE + 32 || touchBody() == true || TouchWALL(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y + 1) == 0) {
 		
 		STATE = 0;
 		ProcessDead();
@@ -331,6 +458,9 @@ void MoveRight() {
 			if (SIZE_SNAKE == -1)
 				SIZE_SNAKE = 6;
 		}
+		else if (triggerCount == 1 && snake[0].x == WIDTH_CONSOLE - 10 && snake[0].y == 1) {
+			clearGate();
+		}
 		for (int i = 0; i < SIZE_SNAKE - 1; i++) {
 			snake[i].x = snake[i + 1].x;
 			snake[i].y = snake[i + 1].y;
@@ -340,7 +470,7 @@ void MoveRight() {
 }
 
 void MoveLeft() {
-	if (snake[SIZE_SNAKE - 1].x - 1 <= 0 + 32 || touchBody() == true) {
+	if (snake[SIZE_SNAKE - 1].x - 1 <= 0 + 32 || touchBody() == true || TouchWALL(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y + 1) == 0) {
 		STATE = 0;
 		ProcessDead();
 	}
@@ -349,6 +479,9 @@ void MoveLeft() {
 			Eat();
 			if (SIZE_SNAKE == -1)
 				SIZE_SNAKE = 6;
+		}
+		else if (triggerCount == 1 && snake[0].x == WIDTH_CONSOLE - 10 && snake[0].y == 1) {
+			clearGate();
 		}
 		for (int i = 0; i < SIZE_SNAKE - 1; i++) {
 			snake[i].x = snake[i + 1].x;
@@ -359,7 +492,7 @@ void MoveLeft() {
 }
 
 void MoveDown() {
-	if (snake[SIZE_SNAKE - 1].y + 1 >= HEIGH_CONSOLE + 7 || touchBody() == true) {
+	if (snake[SIZE_SNAKE - 1].y + 1 >= HEIGH_CONSOLE + 7 || touchBody() == true || TouchWALL(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y + 1) == 0) {
 		STATE = 0;
 		ProcessDead();
 	}
@@ -368,6 +501,12 @@ void MoveDown() {
 			Eat();
 			if (SIZE_SNAKE == -1)
 				SIZE_SNAKE = 6;
+		}
+		else if (triggerCount == 1 && snake[0].x == WIDTH_CONSOLE - 10 && snake[0].y == 1) {
+			clearGate();
+		}
+		else if (trigger.x != 0 && trigger.y != 0 && snake[SIZE_SNAKE - 1].x == trigger.x && snake[SIZE_SNAKE - 1].y + 1 == trigger.y) {
+			moveGate();
 		}
 		for (int i = 0; i < SIZE_SNAKE - 1; i++) {
 			snake[i].x = snake[i + 1].x;
@@ -378,7 +517,7 @@ void MoveDown() {
 }
 
 void MoveUp() {
-	if (snake[SIZE_SNAKE - 1].y - 1 <= 0 + 7 || touchBody() == true) {
+	if (snake[SIZE_SNAKE - 1].y - 1 <= 0 + 7 || touchBody() == true ||  TouchWALL(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y + 1) == 0) {
 		STATE = 0;
 		ProcessDead();
 	}
@@ -387,6 +526,9 @@ void MoveUp() {
 			Eat();
 			if (SIZE_SNAKE == -1)
 				SIZE_SNAKE = 6;
+		}
+		else if (triggerCount == 1 && snake[0].x == WIDTH_CONSOLE - 10 && snake[0].y == 1) {
+			clearGate();
 		}
 		for (int i = 0; i < SIZE_SNAKE - 1; i++) {
 			snake[i].x = snake[i + 1].x;
@@ -440,7 +582,8 @@ void ThreadFunc() {
 			if (SPEED == MAX_SPEED - 1) {
 				SaveGame();
 				system("cls");
-				system("color 252");
+				system("color F0");
+				/*system("color 252");*/
 				readFileAnimation("congrat.txt", 1, 12, 252);
 				STATE = 0;
 				continue;
@@ -479,7 +622,7 @@ void ThreadFunc() {
 			index = 0;
 
 			
-			Sleep(500 / SPEED); // change speed here
+			Sleep(900 / SPEED); // change speed here
 		}
 	}
 }
@@ -902,3 +1045,20 @@ void showLeaderboard() {
 	cin.get();
 }
 
+void checkPause(bool &isPause) {
+	if (isPause == true) {
+		color(249);
+		GotoXY(106, 23);
+
+		cout << "                   ";
+		GotoXY(106, 24);
+		cout << "                   ";
+
+		// Delete pause notice
+		GotoXY(20, 30);
+		cout << "                                                                                                               ";
+		GotoXY(20, 31);
+		cout << "                                                                                                                ";
+	}
+	isPause = false;
+}

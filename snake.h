@@ -19,6 +19,8 @@
 #include <mmsystem.h>
 #include <cwchar>
 #include <atomic>
+#include <io.h>
+#include <fcntl.h>
 using namespace std;
 
 #define MAX_SIZE_SNAKE 32
@@ -41,11 +43,12 @@ using namespace std;
 #define BLACK    15
 
 #define MAX_PLAYERS 100
+#define MAX_LEVEL 3
 
 
 
-
-extern POINT snake[31];
+extern POINT WALL[100], TRIGGER[5], trigger;
+extern POINT snake[32];
 extern POINT food[8];
 extern string NAME;
 extern bool music;
@@ -56,7 +59,8 @@ extern int HEIGH_CONSOLE, WIDTH_CONSOLE;
 extern int FOOD_INDEX;
 extern int SIZE_SNAKE;
 extern int STATE;
-
+extern int WALLcount, triggerCount, SEED, LEVEL;
+void checkPause(bool &isPause);
 void FixConsoleWindow();
 void GotoXY(int x, int y);
 bool IsValid(int x, int y);
@@ -92,4 +96,13 @@ void showLeaderboard();
 void SaveGame();
 string LoadGame(string fileName);
 void clearSnake();
+void DrawGateIn();
+bool IsValidGate(int x, int y);
+void drawHorWALL(int c, int length, int x, int y, int& count, POINT* a);
+void drawVerWALL(int c, int length, int x, int y, int& count, POINT* a);
+void drawPointOut();
+void eraseDrawing(POINT start, POINT end);
+void moveGate();
+void clearGate();
+bool TouchWALL(int x, int y);
 #endif // !snake_game

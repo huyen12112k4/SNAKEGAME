@@ -6,5 +6,4 @@ D:\KHTN\HK3\KTLT2\SNAKEGAME-main\x64\Debug\TEMP.exe
 C:\Users\ASUS\Downloads\SNAKEGAME-main (4)\SNAKEGAME-main\x64\Debug\TEMP.exe
 C:\Users\ASUS\Downloads\Update\x64\Debug\TEMP.exe
 C:\Users\ASUS\Downloads\Update (1)\Update\x64\Debug\TEMP.exe
-C:\Users\ASUS\Downloads\Update (2)\x64\Debug\TEMP.exe
-C:\Users\ASUS\Downloads\Update (2)\Source\x64\Debug\TEMP.exe
+C:\Users\ASUS\Downloads\Update (3)\Update\x64\Debug\TEMP.exe
